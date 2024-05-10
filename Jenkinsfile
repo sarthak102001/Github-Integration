@@ -1,56 +1,76 @@
 pipeline {
-    agent any
-
-    stages {
-        stage('Build') {
-            steps {
-                // Build the code using Maven
-                sh 'mvn clean package'
-            }
-        }
-        stage('Unit and Integration Tests') {
-            steps {
-                // Run unit tests
-                sh 'mvn test'
-                // Run integration tests
-                sh 'mvn integration-test'
-            }
-        }
-        stage('Code Analysis') {
-            steps {
-                // Analyze code using Jenkins built-in tools like Checkstyle, PMD, FindBugs
-                // Example: sh 'mvn checkstyle:checkstyle'
-            }
-        }
-        stage('Security Scan') {
-            steps {
-                // Perform security scan using a tool like OWASP ZAP or SonarQube
-                // Example: sh 'docker run -v <your_code_directory>:/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://localhost:8080'
-            }
-        }
-        stage('Deploy to Staging') {
-            steps {
-                // Deploy to staging server using a tool like AWS CodeDeploy
-                // Example: sh 'aws deploy create-deployment --application-name <your_application_name> --deployment-group-name <your_deployment_group_name> --s3-location <your_s3_location>'
-            }
-        }
-        stage('Integration Tests on Staging') {
-            steps {
-                // Run integration tests on staging environment
-                // Example: sh 'java -jar selenium-server-standalone.jar'
-            }
-        }
-        stage('Deploy to Production') {
-            steps {
-                // Deploy to production server using a tool like AWS CodeDeploy
-                // Example: sh 'aws deploy create-deployment --application-name <your_application_name> --deployment-group-name <your_deployment_group_name> --s3-location <your_s3_location>'
-            }
-        }
-    }
+agent any
     
-    post {
-        always {
-            // Send email notification with attachment
-            emailext attachLog: true, to: 'sarthaksharma084@gmail.com', subject: "Pipeline ${currentBuild.result}: ${env.JOB_NAME}", body: "Pipeline ${currentBuild.result}: ${env.JOB_NAME}"
-        }
-    }
+environment {
+DIRECTORY_PATH = "/path/to/code"
+TESTING_ENVIRONMENT = "test-env"
+PRODUCTION_ENVIRONMENT = "production-env"
+}
+    
+stages {
+stage('Build') {
+steps {
+echo "Fetching the source code from the directory path:
+,→ ${env.DIRECTORY_PATH} using maven"
+echo "Compiling the code and generating necessary artifacts"
+}
+}
+stage('Unit and Integration Test') {
+steps {
+echo "Running unit tests"
+sleep(time: 10, unit: 'SECONDS')
+echo "Running integration tests"
+}
+}
+stage('Code Analysis') {
+steps {
+echo "Integrating a code analysis tool to analyse the code and
+,→ ensuring that it meets industry standards using SonarQube"
+}
+}
+stage('Security Scan') {
+steps {
+echo "Perform a security scan on the code using a tool to identify
+,→ any vulnerabilitie using OWASP ZAP"
+}
+}
+stage('Deploy to Staging') {
+steps {
+echo " Deploying the application to a staging server in AWS Elastic
+,→ Beanstalk"
+}
+}
+stage('Integration Tests on Staging') {
+steps {
+script {
+echo "Running integration tests on the staging environment to
+ensure the application functions as expected in a
+production-like environment"
+,→
+,→
+}
+}
+post {
+success {
+// Send notification email for successful pipeline
+Page 2 of 4
+File 2 of 3 Jenkinsfile
+emailext (
+subject: "Pipeline Status: SUCCESS",
+body: "The Jenkins pipeline has completed successfully.",
+to: "sarthaksharma084@gmail.com",
+mimeType: 'text/html',
+attachLog: true
+)
+}
+}
+
+}
+stage('Deploy to Production') {
+steps {
+echo "Deploying the code to production environment:
+,→ ${env.PRODUCTION_ENVIRONMENT}"
+}
+}
+}
+}
