@@ -39,6 +39,7 @@ pipeline {
                 // Deployment to staging steps go here
             }
         }
+        
         stage('Integration Tests on Staging') {
             steps {
                 echo "Running integration tests on the staging environment"
@@ -75,3 +76,4 @@ pipeline {
             )
         }
     }
+}
