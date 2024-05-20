@@ -48,7 +48,7 @@ pipeline {
         }
         stage('Deploy to Production') {
             steps {
-                echo "deploying the code to production environment: ${env.PRODUCTION_ENVIRONMENT}"
+                echo "I am deploying the code to production environment: ${env.PRODUCTION_ENVIRONMENT}"
                 // Deployment to production steps go here
             }
         }
